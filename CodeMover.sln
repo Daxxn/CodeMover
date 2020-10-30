@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMover", "CodeMover\CodeMover.csproj", "{336FD812-B01B-4E62-B81C-36AB8B9665DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{336FD812-B01B-4E62-B81C-36AB8B9665DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{336FD812-B01B-4E62-B81C-36AB8B9665DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{336FD812-B01B-4E62-B81C-36AB8B9665DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{336FD812-B01B-4E62-B81C-36AB8B9665DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84822B72-AAD7-403E-BA16-5B78755A3F41}
+	EndGlobalSection
+EndGlobal
