@@ -1,13 +1,12 @@
 ﻿using CodeMover.Control;
 using CodeMover.Control.Strategies;
-using CodeMover.Control.Strategies.ResultInterfaces;
 using CodeMover.Exceptions;
 using CodeMover.Logic;
 using CodeMover.Logic.Exclude;
 using CodeMover.Logic.Settings;
 
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 
 namespace CodeMover
 {
@@ -24,10 +23,9 @@ namespace CodeMover
             var cont = true;
             var working = false;
 
-            WindowController.PrintMessage("Code Mover v0.0.1");
+            WindowController.PrintMessage($"Code Mover {GetVersion()}");
 
-            WindowController.PrintList(Settings.Exclude.Files, "Files");
-            WindowController.PrintList(Settings.Exclude.Folders, "Folders");
+            WindowController.PrintExcludeList(Settings.Exclude.Files, Settings.Exclude.Folders);
 
             IStrategy strategy = new InvalidStrategy();
             while (cont)
@@ -37,6 +35,12 @@ namespace CodeMover
                   WindowController.PrintPaths();
                   working = true;
                   strategy = Interpreter.ExecuteCommand(GetUserInput());
+
+                  if (strategy is ExitStrategy)
+                  {
+                     cont = false;
+                     break;
+                  }
 
                   try
                   {
@@ -90,8 +94,7 @@ namespace CodeMover
          }
          finally
          {
-            Console.WriteLine("\n\nFinished. Press ENTER.");
-            Console.ReadLine();
+            Console.WriteLine("\n\nFinished.");
          }
       }
 
@@ -112,6 +115,13 @@ namespace CodeMover
             }
          }
          return def;
+      }
+
+      private static string GetVersion()
+      {
+         var assembly = Assembly.GetExecutingAssembly();
+         var name = assembly.GetName();
+         return name.Version.ToString();
       }
    }
 }

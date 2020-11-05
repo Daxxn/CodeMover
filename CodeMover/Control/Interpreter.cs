@@ -1,9 +1,6 @@
 ﻿using CodeMover.Control.Strategies;
-using CodeMover.Control.Strategies.ResultInterfaces;
-using CodeMover.Logic;
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeMover.Control
 {

@@ -37,19 +37,6 @@ namespace CodeMover.Logic
                foreach (var file in files)
                {
                   movedFiles.Add(CopyFile(source, file, destination));
-                  //try
-                  //{
-                  //    var relPath = Path.GetRelativePath(source, file);
-                  //    var newPath = Path.Combine(destination, relPath);
-
-                  //    File.Copy(file, Path.Combine(destination, newPath));
-
-                  //    movedFiles.Add(new FileRecord(file, newPath, true, null));
-                  //}
-                  //catch (Exception e)
-                  //{
-                  //    errors.Add(e);
-                  //}
                }
             }
 
@@ -129,8 +116,61 @@ namespace CodeMover.Logic
             }
 
             return (await Task.WhenAll(tasks)).ToList();
+         }
+         catch (Exception)
+         {
+            throw;
+         }
+      }
 
-            //return fileRecords;
+      /// <summary>
+      /// Moves a full directory, recursively and async - Final Version
+      /// </summary>
+      /// <returns>
+      /// An asynchronous Task list of FileRecords.
+      /// The FileRecord list is just for display purposes with no functionality.
+      /// </returns>
+      public static  async Task<List<FileRecord>> NewMoveDirAsync()
+      {
+         try
+         {
+            var source = Program.Settings.Source;
+            var destination = Program.Settings.Destination;
+
+            List<Exception> errors = new List<Exception>();
+            List<FileRecord> fileRecords = new List<FileRecord>();
+            List<Task<FileRecord>> tasks = new List<Task<FileRecord>>();
+
+            string[] Unfilteredfiles = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
+
+            string[] files = Excluder.Instance.Run(Unfilteredfiles);
+
+            CreateDirs(source, destination);
+
+            foreach (var file in files)
+            {
+               try
+               {
+                  tasks.Add(Task.Run(() =>
+                  {
+                     using (Copy copy = new Copy(BuildFilePath(source, file, destination)))
+                     {
+                        return copy.CopyFile();
+                     }
+                  }));
+               }
+               catch (Exception e)
+               {
+                  errors.Add(e);
+               }
+            }
+
+            if (errors.Count > 0)
+            {
+               throw new CopyFilesException(errors);
+            }
+
+            return (await Task.WhenAll(tasks)).ToList();
          }
          catch (Exception)
          {
@@ -170,18 +210,31 @@ namespace CodeMover.Logic
             Console.WriteLine(relPath);
             Console.WriteLine(newPath);
 
-            //CreateDirs(relPath, dest);
-
             File.Copy(file, newPath, true);
 
-            var completedFile = new FileRecord(file, newPath, true, null);
+            var completedFile = new FileRecord(file, newPath, null);
             WindowController.PrintResult(completedFile);
             return completedFile;
          }
          catch (Exception e)
          {
-            return new FileRecord(src, dest, false, e);
+            return new FileRecord(src, dest, e);
          }
+      }
+
+      /// <summary>
+      /// Takes the file and returns a new FileRecord with the files new path.
+      /// </summary>
+      /// <param name="src">The source directory</param>
+      /// <param name="file">The full source file path.</param>
+      /// <param name="dest">The destination directory.</param>
+      /// <returns>A new FileRecord with the source, destination and new file paths.</returns>
+      private static FileRecord BuildFilePath(string src, string file, string dest)
+      {
+         var relPath = Path.GetRelativePath(src, file);
+         var newPath = Path.Combine(dest, relPath);
+
+         return new FileRecord(src, dest, file, newPath, null);
       }
 
       public static (bool, string) CreateDir(string input)
@@ -198,6 +251,11 @@ namespace CodeMover.Logic
          }
       }
 
+      /// <summary>
+      /// Recreates the source directory structure in the destination directory.
+      /// </summary>
+      /// <param name="source">Source directory</param>
+      /// <param name="dest">Destination directory</param>
       public static void CreateDirs(string source, string dest)
       {
          string[] unfilteredDirs = Directory.GetDirectories(source, "", SearchOption.AllDirectories);
@@ -213,7 +271,6 @@ namespace CodeMover.Logic
                Directory.CreateDirectory(path);
             }
          }
-
       }
       #endregion
 

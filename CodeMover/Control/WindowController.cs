@@ -1,10 +1,8 @@
 ﻿using CodeMover.Exceptions;
 using CodeMover.Logic;
-using CodeMover.Logic.Settings;
+
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
 namespace CodeMover.Control
@@ -83,6 +81,13 @@ namespace CodeMover.Control
          {
             Console.WriteLine($"   {l}");
          }
+      }
+
+      public static void PrintExcludeList(IEnumerable<string> files, IEnumerable<string> folders)
+      {
+         Console.WriteLine("Exclude:");
+         PrintList(files, " Files:");
+         PrintList(folders, " Folders:");
       }
 
       public static void PrintInvalidCommand(string input)

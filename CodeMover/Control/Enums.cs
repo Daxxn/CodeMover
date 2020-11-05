@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CodeMover.Control
+﻿namespace CodeMover.Control
 {
    public enum Command
    {
@@ -18,6 +14,7 @@ namespace CodeMover.Control
       working,
       ready,
       done,
+      close,
    };
    public enum Accessor
    {
