@@ -19,7 +19,8 @@ namespace CodeMover.Control.Strategies
          Status = Status.working;
          try
          {
-            Results = await FileController.MoveDirAsync();
+            //Results = await FileController.MoveDirAsync();
+            Results = await FileController.NewMoveDirAsync();
          }
          catch (Exception)
          {

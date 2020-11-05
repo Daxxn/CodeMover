@@ -85,6 +85,13 @@ namespace CodeMover.Control
          }
       }
 
+      public static void PrintExcludeList(IEnumerable<string> files, IEnumerable<string> folders)
+      {
+         Console.WriteLine("Exclude:");
+         PrintList(files, " Files:");
+         PrintList(folders, " Folders:");
+      }
+
       public static void PrintInvalidCommand(string input)
       {
          Console.WriteLine($"Invalid - {(input == "" ? "*Nothing" : input)}");

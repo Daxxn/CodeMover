@@ -8,14 +8,30 @@ namespace CodeMover.Logic
    {
       public string Source { get; }
       public string Destination { get; }
-      public bool Success { get; set; }
+      public string SourceFilePath { get; set; }
+      public string DestFilePath { get; set; }
       public Exception Error { get; set; }
+      public bool _success;
 
-      public FileRecord(string source, string dest, bool success, Exception error)
+      public FileRecord(string source, string dest, Exception error)
       {
          Source = source;
          Destination = dest;
-         Success = success;
+         Error = error;
+      }
+      public FileRecord(string source, string dest, string sourceFile, Exception error)
+      {
+         Source = source;
+         Destination = dest;
+         SourceFilePath = sourceFile;
+         Error = error;
+      }
+      public FileRecord(string source, string dest, string sourceFile, string destFile, Exception error)
+      {
+         Source = source;
+         Destination = dest;
+         SourceFilePath = sourceFile;
+         DestFilePath = destFile;
          Error = error;
       }
 
@@ -30,6 +46,11 @@ namespace CodeMover.Logic
             b.AppendLine($"Error: {Error}");
          }
          return b.ToString();
+      }
+
+      public bool Success
+      {
+         get => Error is null ? true : false;
       }
    }
 }

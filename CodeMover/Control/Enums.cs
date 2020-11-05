@@ -18,6 +18,7 @@ namespace CodeMover.Control
       working,
       ready,
       done,
+      close,
    };
    public enum Accessor
    {

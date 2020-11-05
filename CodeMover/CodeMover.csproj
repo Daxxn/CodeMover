@@ -3,6 +3,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>CodeMover.Program</StartupObject>
+    <Authors>Daxxn</Authors>
+    <Company>Daxxn Industries</Company>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
