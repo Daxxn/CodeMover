@@ -12,13 +12,20 @@ namespace CodeMover
 {
    class Program
    {
+      #region Properties
+      private static FileController FileController { get; } = FileController.Instance;
+      public static WindowController WindowController { get; set; } = WindowController.Instance;
       public static SettingsModel Settings { get; private set; }
+      #endregion
+
       static void Main(string[] args)
       {
          try
          {
             Settings = SettingsLoader.LoadSettings(ParseArgs(args));
             Excluder.Instance.SetSettings(Settings.Exclude);
+
+            FileController.AddObserver(WindowController);
 
             var cont = true;
             var working = false;
@@ -94,6 +101,7 @@ namespace CodeMover
          }
          finally
          {
+            FileController.RemoveObserver(WindowController);
             Console.WriteLine("\n\nFinished.");
          }
       }

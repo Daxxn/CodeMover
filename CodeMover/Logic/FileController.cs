@@ -1,4 +1,5 @@
 ﻿using CodeMover.Control;
+using CodeMover.Control.Observers;
 using CodeMover.Exceptions;
 using CodeMover.Logic.Exclude;
 using System;
@@ -10,14 +11,18 @@ using System.Threading.Tasks;
 
 namespace CodeMover.Logic
 {
-   public static class FileController
+   public class FileController : FileObservable
    {
       #region - Fields & Properties
+      private static FileController _instance;
+      #endregion
 
+      #region Constructors
+      private FileController() { }
       #endregion
 
       #region - Methods
-      public static IEnumerable<FileRecord> MoveDir()
+      public IEnumerable<FileRecord> MoveDir()
       {
          try
          {
@@ -55,7 +60,7 @@ namespace CodeMover.Logic
          }
       }
 
-      public static async Task<List<FileRecord>> MoveDirAsyncOld(string source, string destination)
+      public async Task<List<FileRecord>> MoveDirAsyncOld(string source, string destination)
       {
          try
          {
@@ -78,7 +83,7 @@ namespace CodeMover.Logic
          }
       }
 
-      public static async Task<List<FileRecord>> MoveDirAsync()
+      public async Task<List<FileRecord>> MoveDirAsync()
       {
          try
          {
@@ -130,7 +135,7 @@ namespace CodeMover.Logic
       /// An asynchronous Task list of FileRecords.
       /// The FileRecord list is just for display purposes with no functionality.
       /// </returns>
-      public static  async Task<List<FileRecord>> NewMoveDirAsync()
+      public async Task<List<FileRecord>> NewMoveDirAsync()
       {
          try
          {
@@ -155,7 +160,9 @@ namespace CodeMover.Logic
                   {
                      using (Copy copy = new Copy(BuildFilePath(source, file, destination)))
                      {
-                        return copy.CopyFile();
+                        var copiedFile = copy.CopyFile();
+                        Notify(copiedFile);
+                        return copiedFile;
                      }
                   }));
                }
@@ -178,29 +185,29 @@ namespace CodeMover.Logic
          }
       }
 
-      public static bool FileExists(string path)
+      public bool FileExists(string path)
       {
          return File.Exists(path);
       }
 
-      public static bool DirExists(string path)
+      public bool DirExists(string path)
       {
          return Directory.Exists(path);
       }
 
-      public static bool MatchExt(string path, string ext)
+      public bool MatchExt(string path, string ext)
       {
          return FileExists(path) ? Path.GetExtension(path) == ext : false;
       }
 
       #region Private Methods
-      private static string[] GetFilePaths(string dirPath)
+      private string[] GetFilePaths(string dirPath)
       {
          throw new NotImplementedException(nameof(GetFilePaths));
       }
       #endregion
 
-      private static FileRecord CopyFile(string src, string file, string dest)
+      private FileRecord CopyFile(string src, string file, string dest)
       {
          try
          {
@@ -213,7 +220,7 @@ namespace CodeMover.Logic
             File.Copy(file, newPath, true);
 
             var completedFile = new FileRecord(file, newPath, null);
-            WindowController.PrintResult(completedFile);
+            //WindowController.PrintResult(completedFile);
             return completedFile;
          }
          catch (Exception e)
@@ -229,7 +236,7 @@ namespace CodeMover.Logic
       /// <param name="file">The full source file path.</param>
       /// <param name="dest">The destination directory.</param>
       /// <returns>A new FileRecord with the source, destination and new file paths.</returns>
-      private static FileRecord BuildFilePath(string src, string file, string dest)
+      private FileRecord BuildFilePath(string src, string file, string dest)
       {
          var relPath = Path.GetRelativePath(src, file);
          var newPath = Path.Combine(dest, relPath);
@@ -237,7 +244,7 @@ namespace CodeMover.Logic
          return new FileRecord(src, dest, file, newPath, null);
       }
 
-      public static (bool, string) CreateDir(string input)
+      public (bool, string) CreateDir(string input)
       {
          try
          {
@@ -256,7 +263,7 @@ namespace CodeMover.Logic
       /// </summary>
       /// <param name="source">Source directory</param>
       /// <param name="dest">Destination directory</param>
-      public static void CreateDirs(string source, string dest)
+      public void CreateDirs(string source, string dest)
       {
          string[] unfilteredDirs = Directory.GetDirectories(source, "", SearchOption.AllDirectories);
          string[] dirs = Excluder.Instance.Run(unfilteredDirs, FileType.Directory);
@@ -275,7 +282,17 @@ namespace CodeMover.Logic
       #endregion
 
       #region - Full Properties
-
+      public static FileController Instance
+      {
+         get
+         {
+            if (_instance is null)
+            {
+               _instance = new FileController();
+            }
+            return _instance;
+         }
+      }
       #endregion
    }
 }

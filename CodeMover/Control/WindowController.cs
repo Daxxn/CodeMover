@@ -1,4 +1,5 @@
-﻿using CodeMover.Exceptions;
+﻿using CodeMover.Control.Observers;
+using CodeMover.Exceptions;
 using CodeMover.Logic;
 
 using System;
@@ -7,37 +8,47 @@ using System.Threading;
 
 namespace CodeMover.Control
 {
-   public static class WindowController
+   public class WindowController : IObserver
    {
       #region - Fields & Properties
-      private static Dictionary<Command, string> CommandDict { get; } = new Dictionary<Command, string>
+      private static WindowController _instance;
+      private Dictionary<Command, string> CommandDict { get; } = new Dictionary<Command, string>
         {
             { Command.run, $" - Runs the code copy operation." },
             { Command.src, $" - Sets the source of the files to copy." },
             { Command.dest, $" - Sets the destination of the files." },
             { Command.settings, $" = Sets a setting to a given value. ex: {Command.settings} Exclude.Folders.add=folder" }
         };
-      private static int animationFrame { get; set; }
-      private static string[] animation { get; } = new string[]
+      private int animationFrame { get; set; }
+      private string[] animation { get; } = new string[]
       {
             "|", "/", "-", "\\",
       };
       #endregion
 
+      #region Constructors
+      private WindowController() { }
+      #endregion
+
       #region - Methods
-      public static void PrintMessage(string message)
+      public void Update(FileRecord completedFile)
+      {
+         PrintResult(completedFile);
+      }
+
+      public void PrintMessage(string message)
       {
          Console.WriteLine(message);
          Console.WriteLine();
       }
 
-      public static void PrintMessage(object message)
+      public void PrintMessage(object message)
       {
          Console.WriteLine(message.ToString());
          Console.WriteLine();
       }
 
-      public static void PrintError(Exception e)
+      public void PrintError(Exception e)
       {
          var originalColor = Console.ForegroundColor;
          Console.ForegroundColor = ConsoleColor.Red;
@@ -45,7 +56,7 @@ namespace CodeMover.Control
          Console.ForegroundColor = originalColor;
       }
 
-      public static void PrintErrorList(CopyFilesException e)
+      public void PrintErrorList(CopyFilesException e)
       {
          var originalColor = Console.ForegroundColor;
          Console.ForegroundColor = ConsoleColor.Red;
@@ -57,12 +68,12 @@ namespace CodeMover.Control
          Console.ForegroundColor = originalColor;
       }
 
-      public static void PrintResult(FileRecord file)
+      public void PrintResult(FileRecord file)
       {
          Console.WriteLine(file.ToString());
       }
 
-      public static void PrintDictionary<K, V>(Dictionary<K, V> dict)
+      public void PrintDictionary<K, V>(Dictionary<K, V> dict)
       {
          foreach (var kv in dict)
          {
@@ -74,7 +85,7 @@ namespace CodeMover.Control
          }
       }
 
-      public static void PrintList<T>(IEnumerable<T> list, string title)
+      public void PrintList<T>(IEnumerable<T> list, string title)
       {
          Console.WriteLine($"{title} :");
          foreach (var l in list)
@@ -83,19 +94,19 @@ namespace CodeMover.Control
          }
       }
 
-      public static void PrintExcludeList(IEnumerable<string> files, IEnumerable<string> folders)
+      public void PrintExcludeList(IEnumerable<string> files, IEnumerable<string> folders)
       {
          Console.WriteLine("Exclude:");
          PrintList(files, " Files:");
          PrintList(folders, " Folders:");
       }
 
-      public static void PrintInvalidCommand(string input)
+      public void PrintInvalidCommand(string input)
       {
          Console.WriteLine($"Invalid - {(input == "" ? "*Nothing" : input)}");
       }
 
-      public static void PrintCommands()
+      public void PrintCommands()
       {
          foreach (var kv in CommandDict)
          {
@@ -103,7 +114,7 @@ namespace CodeMover.Control
          }
       }
 
-      public static void PrintWorkingMessage()
+      public void PrintWorkingMessage()
       {
          Thread.Sleep(60);
          Console.WriteLine($"Working {PrintWorkAnimation()}");
@@ -111,7 +122,7 @@ namespace CodeMover.Control
 
       }
 
-      public static void PrintPaths()
+      public void PrintPaths()
       {
          Console.WriteLine();
          var originalColor = Console.BackgroundColor;
@@ -129,7 +140,7 @@ namespace CodeMover.Control
          Console.WriteLine();
       }
 
-      private static string PrintWorkAnimation()
+      private string PrintWorkAnimation()
       {
          animationFrame++;
          if (animationFrame >= animation.Length)
@@ -138,10 +149,21 @@ namespace CodeMover.Control
          }
          return animation[animationFrame];
       }
+
       #endregion
 
       #region - Full Properties
-
+      public static WindowController Instance
+      {
+         get
+         {
+            if (_instance is null)
+            {
+               _instance = new WindowController();
+            }
+            return _instance;
+         }
+      }
       #endregion
    }
 }

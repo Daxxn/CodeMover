@@ -13,6 +13,7 @@ namespace CodeMover.Control.Strategies
    public class SettingsStrategy : IStrategy, IArgs, IPathResult
    {
       #region Properties
+      private FileController FileController { get; } = FileController.Instance;
       public string Args { get; set; }
       public Status Status { get; set; }
       public string Results { get; set; }

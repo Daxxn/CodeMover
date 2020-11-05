@@ -11,6 +11,7 @@ namespace CodeMover.Control.Strategies
    public class ExecuteStrategy : IStrategy, IFileResults
    {
       #region Properties
+      private FileController FileController { get; } = FileController.Instance;
       public Status Status { get; set; }
       public List<FileRecord> Results { get; set; }
       #endregion
