@@ -8,14 +8,17 @@ namespace CodeMover.Control.Strategies
 {
    public class ExitStrategy : IStrategy, IPathResult
    {
+      #region Properties
       public Status Status { get; set; }
       public string Results { get; set; }
-      //object IStrategyResults.Results { get => Results; set => Results = value as string; }
+      #endregion
 
+      #region Methods
       public async Task<Status> Run()
       {
          Results = "";
          return await Task.Run(() => Status.done);
       }
+      #endregion
    }
 }

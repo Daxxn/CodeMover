@@ -37,19 +37,6 @@ namespace CodeMover.Logic
                foreach (var file in files)
                {
                   movedFiles.Add(CopyFile(source, file, destination));
-                  //try
-                  //{
-                  //    var relPath = Path.GetRelativePath(source, file);
-                  //    var newPath = Path.Combine(destination, relPath);
-
-                  //    File.Copy(file, Path.Combine(destination, newPath));
-
-                  //    movedFiles.Add(new FileRecord(file, newPath, true, null));
-                  //}
-                  //catch (Exception e)
-                  //{
-                  //    errors.Add(e);
-                  //}
                }
             }
 
@@ -129,8 +116,6 @@ namespace CodeMover.Logic
             }
 
             return (await Task.WhenAll(tasks)).ToList();
-
-            //return fileRecords;
          }
          catch (Exception)
          {
@@ -160,7 +145,6 @@ namespace CodeMover.Logic
 
             string[] files = Excluder.Instance.Run(Unfilteredfiles);
 
-            //await Task.Run(() => CreateDirs(source, destination));
             CreateDirs(source, destination);
 
             foreach (var file in files)
@@ -169,14 +153,7 @@ namespace CodeMover.Logic
                {
                   tasks.Add(Task.Run(() =>
                   {
-                     //var copy = new Copy
-                     //{
-                     //   File = BuildFilePath(source, file, destination),
-                     //};
-                     ////return copy.CopyFileAsyncNoGC();
-                     //return copy.CopyFile();
-
-                     using (Copy2 copy = new Copy2(BuildFilePath(source, file, destination)))
+                     using (Copy copy = new Copy(BuildFilePath(source, file, destination)))
                      {
                         return copy.CopyFile();
                      }
@@ -194,8 +171,6 @@ namespace CodeMover.Logic
             }
 
             return (await Task.WhenAll(tasks)).ToList();
-
-            //return fileRecords;
          }
          catch (Exception)
          {
@@ -234,8 +209,6 @@ namespace CodeMover.Logic
 
             Console.WriteLine(relPath);
             Console.WriteLine(newPath);
-
-            //CreateDirs(relPath, dest);
 
             File.Copy(file, newPath, true);
 

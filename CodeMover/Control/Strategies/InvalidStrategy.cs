@@ -8,11 +8,13 @@ namespace CodeMover.Control.Strategies
 {
    public class InvalidStrategy : IStrategy, IPathResult
    {
+      #region Properties
       public string Args { get; set; }
       public Status Status { get; set; }
       public string Results { get; set; }
-      //object IStrategyResults.Results { get => Results; set => Results = value as string; }
+      #endregion
 
+      #region Methods
       public async Task<Status> Run()
       {
          return await Task.Run(() =>
@@ -22,5 +24,6 @@ namespace CodeMover.Control.Strategies
             return Status.done;
          });
       }
+      #endregion
    }
 }

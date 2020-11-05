@@ -6,7 +6,7 @@
     <StartupObject>CodeMover.Program</StartupObject>
     <Authors>Daxxn</Authors>
     <Company>Daxxn Industries</Company>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

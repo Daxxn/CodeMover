@@ -1,10 +1,8 @@
 ﻿using CodeMover.Exceptions;
 using CodeMover.Logic;
-using CodeMover.Logic.Settings;
+
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
 namespace CodeMover.Control

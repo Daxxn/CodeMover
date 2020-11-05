@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CodeMover.Control
+﻿namespace CodeMover.Control
 {
    public enum Command
    {

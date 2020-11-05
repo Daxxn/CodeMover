@@ -12,10 +12,13 @@ namespace CodeMover.Control.Strategies
 {
    public class SettingsStrategy : IStrategy, IArgs, IPathResult
    {
+      #region Properties
       public string Args { get; set; }
       public Status Status { get; set; }
       public string Results { get; set; }
+      #endregion
 
+      #region Methods
       public async Task<Status> Run()
       {
          try
@@ -109,5 +112,6 @@ namespace CodeMover.Control.Strategies
          newArray[array.Length] = value;
          return newArray;
       }
+      #endregion
    }
 }
