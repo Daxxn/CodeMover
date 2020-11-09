@@ -7,6 +7,7 @@
       src = 3,
       dest = 4,
       settings = 5,
+      test = 6,
       invalid = 0,
    };
    public enum Status

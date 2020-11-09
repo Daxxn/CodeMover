@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CodeMover.Logic
@@ -135,7 +136,7 @@ namespace CodeMover.Logic
       /// An asynchronous Task list of FileRecords.
       /// The FileRecord list is just for display purposes with no functionality.
       /// </returns>
-      public async Task<List<FileRecord>> NewMoveDirAsync()
+      public async Task<List<FileRecord>> NewMoveDirAsync(IProgress<FileRecord> progress, CancellationToken cancelToken)
       {
          try
          {
@@ -156,15 +157,32 @@ namespace CodeMover.Logic
             {
                try
                {
+                  cancelToken.ThrowIfCancellationRequested();
                   tasks.Add(Task.Run(() =>
                   {
                      using (Copy copy = new Copy(BuildFilePath(source, file, destination)))
                      {
-                        var copiedFile = copy.CopyFile();
-                        Notify(copiedFile);
-                        return copiedFile;
+                        try
+                        {
+                           var copiedFile = copy.CopyFile();
+                           //Notify(copiedFile);
+                           progress.Report(copiedFile);
+                           return copiedFile;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                           return null;
+                        }
+                        catch (Exception)
+                        {
+                           throw;
+                        }
                      }
                   }));
+               }
+               catch (OperationCanceledException)
+               {
+                  break;
                }
                catch (Exception e)
                {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CodeMover.Control.Strategies
@@ -20,7 +21,7 @@ namespace CodeMover.Control.Strategies
       #endregion
 
       #region Methods
-      public async Task<Status> Run()
+      public async Task<Status> Run(IProgress<FileRecord> progress, CancellationToken cancelToken)
       {
          try
          {

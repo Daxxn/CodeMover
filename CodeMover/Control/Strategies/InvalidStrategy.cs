@@ -1,7 +1,7 @@
 ﻿using CodeMover.Control.Strategies.ResultInterfaces;
+using CodeMover.Logic;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CodeMover.Control.Strategies
@@ -16,7 +16,7 @@ namespace CodeMover.Control.Strategies
       #endregion
 
       #region Methods
-      public async Task<Status> Run()
+      public async Task<Status> Run(IProgress<FileRecord> progress, CancellationToken cancelToken)
       {
          return await Task.Run(() =>
          {

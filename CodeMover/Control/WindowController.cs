@@ -24,6 +24,7 @@ namespace CodeMover.Control
       {
             "|", "/", "-", "\\",
       };
+      public SimpleAnimation Animation { get; set; } = new SimpleAnimation();
       #endregion
 
       #region Constructors
@@ -114,14 +115,6 @@ namespace CodeMover.Control
          }
       }
 
-      public void PrintWorkingMessage()
-      {
-         Thread.Sleep(60);
-         Console.WriteLine($"Working {PrintWorkAnimation()}");
-         Console.SetCursorPosition(0, Console.CursorTop - 1);
-
-      }
-
       public void PrintPaths()
       {
          Console.WriteLine();
@@ -140,16 +133,15 @@ namespace CodeMover.Control
          Console.WriteLine();
       }
 
-      private string PrintWorkAnimation()
+      public void StartAnimation()
       {
-         animationFrame++;
-         if (animationFrame >= animation.Length)
-         {
-            animationFrame = 0;
-         }
-         return animation[animationFrame];
+         Animation.Start();
       }
 
+      public void EndAnimation()
+      {
+         Animation.End();
+      }
       #endregion
 
       #region - Full Properties

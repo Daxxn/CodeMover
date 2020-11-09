@@ -13,6 +13,10 @@ namespace CodeMover.Control
       #region - Methods
       public static IStrategy ExecuteCommand(string input)
       {
+         if (input is null)
+         {
+            return null;
+         }
          var cmd = Parse(input);
          switch (cmd.Item1)
          {
@@ -42,6 +46,11 @@ namespace CodeMover.Control
                return new InvalidStrategy
                {
                   Args = input,
+               };
+            case Command.test:
+               return new ExecutionTestStrat
+               {
+                  Args = cmd.Item2,
                };
             default:
                throw new ArgumentException("Command Error. Could not find strategy.");
